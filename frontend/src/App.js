@@ -3,9 +3,9 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-import UserList from "./components/userlist.js";
-import AddUser from "./components/adduser.js";
-import EditUser from "./components/edituser.js";
+import UserList from "./components/userlist.jsx";
+import AddUser from "./components/adduser.jsx";
+import EditUser from "./components/edituser.jsx";
 
 function App() {
   return (
