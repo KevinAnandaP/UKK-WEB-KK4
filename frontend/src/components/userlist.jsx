@@ -1,33 +1,55 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios";
 import {Link} from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
-const [users, setUser] = useState([]);
+    const [users, setUser] = useState([]);
+    const [name, setName] = useState('');
+    const [token, setToken] = useState('');
+    const [setExpire] = useState('');
+    const navigate = useNavigate();
 
-useEffect(() => {
-    getUsers();
-}, []);
-
-const getUsers = async () =>{
-    const response = await axios.get('http://localhost:5000/users');
-    setUser(response.data);
-};
-
-const deleteUser = async (id) =>{
-    try {
-        await axios.delete(`http://localhost:5000/user/${id}`);
+    useEffect(() => {
         getUsers();
-    } catch (error) {
-        console.log(error);
+        refreshToken();
+    }, []);
+
+    const refreshToken = async() => {
+        try {
+            const response = await axios.get('http://localhost:5000/token');
+            setToken(response.data.accessToken);
+            const decoded = jwtDecode(response.data.accessToken);
+            setName(decoded.name);
+            setExpire(decoded.exp);
+        } catch (error) {
+            if(error.response){
+                navigate('/');
+            }
+        }
     }
-}
+
+    const getUsers = async () =>{
+        const response = await axios.get('http://localhost:5000/peoples');
+        setUser(response.data);
+    };
+
+    const deleteUser = async (id) =>{
+        try {
+            await axios.delete(`http://localhost:5000/people/${id}`);
+            getUsers();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
   return (
     <div className="columns mt-5 is-centered">
         <div className="column is-half">
             <Link to={`/add`} className='button is-success'>Add New</Link>
-            <table className='table is-striped is-fullwidth'>
+            <h1 className='button is-success ml-5'>{"Hello " + name + "!"}</h1>
+            <table className='table is-striped is-fullwidth'>  
                 <thead>
                     <tr>
                         <th>No</th>

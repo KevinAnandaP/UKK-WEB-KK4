@@ -16,19 +16,19 @@ useEffect(() => {
 const updateUser = async (e) =>{
     e.preventDefault();
     try {
-        await axios.put(`http://localhost:5000/user/${id}`,{
+        await axios.put(`http://localhost:5000/people/${id}`,{
             name,
             email,
             gender
         });
-        navigate("/");
+        navigate("/list");
     } catch (error) {
         console.log(error);
     }
 };
 
 const getUserById = async () => {
-    const response = await axios.get(`http://localhost:5000/user/${id}`);
+    const response = await axios.get(`http://localhost:5000/people/${id}`);
     setName(response.data.name);
     setEmail(response.data.email);
     setGender(response.data.gender);

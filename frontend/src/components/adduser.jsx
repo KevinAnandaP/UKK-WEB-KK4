@@ -11,12 +11,12 @@ const navigate = useNavigate();
 const saveUser = async (e) =>{
     e.preventDefault();
     try {
-        await axios.post('http://localhost:5000/user',{
+        await axios.post('http://localhost:5000/people',{
             name,
             email,
             gender
         });
-        navigate("/");
+        navigate("/list");
     } catch (error) {
         console.log(error);
     }
