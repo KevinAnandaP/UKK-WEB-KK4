@@ -1,6 +1,7 @@
 import User from "../models/usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 
 export const getUsers = async(req, res) =>{
     try {
@@ -75,4 +76,23 @@ export const Login = async(req, res) => {
             msg: "Email tidak ditemukan"
         });
     }
+}
+
+export const Logout = async(req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+        if(!refreshToken) return res.sendStatus(204);
+        const user = await User.findAll({
+            where:{
+                refresh_token: refreshToken
+            }
+        });
+        if(!user[0]) return res.sendStatus(204);
+        const userId = user[0].id;
+        await User.update({refresh_token: null},{
+            where:{
+                id:userId
+            }
+        });
+        res.clearCookie('refreshToken');
+        return res.sendStatus(200);
 }
